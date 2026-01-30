@@ -6,11 +6,15 @@
 # or multipass exec test-server -- bash /home/ubuntu/scripts/server-stats.sh
 
 echo "Starting server performance stats collection..."
+uptime
 
 # 1. Total CPU usage -b batch -n iterations 
 echo "Total CPU Usage:"
 cpu_idle=$(top -bn2 -d 0.5 | grep "Cpu(s)" | awk '{print "CPU Usage:", 100 - $8 "%"}' | tail -1) 
 echo "$cpu_idle"
+
+# solution:
+# top -bn1 | grep "%Cpu(s):" | cut -d ',' -f 4 | awk '{print "Usage: " 100-$1 "%"}'
 
 printf "\n"
 
@@ -23,6 +27,9 @@ echo "Memory Usage Percentage: $used_percent%"
 free_percent=$(echo "scale=2; $free*100/$total" | bc)
 echo "Memory Free Percentage: $free_percent%"
 
+# solution: 
+# free | grep "Mem:" -w | awk '{printf "Total: %.1fGi\nUsed: %.1fGi (%.2f%%)\nFree: %.1fGi (%.2f%%)\n",$2/1024^2, $3/1024^2, $3/$2 * 100, $4/1024^2, $4/$2 * 100}'
+
 printf "\n"
 
 # 3. Total disk usage (Free vs Used including percentage)
@@ -32,6 +39,9 @@ disk_used_percent=$(echo "scale=2; $disk_used*100/$disk_total" | bc)
 echo "Disk Usage Percentage: $disk_used_percent%"
 disk_free_percent=$(echo "scale=2; $disk_free*100/$disk_total" | bc)
 echo "Disk Free Percentage: $disk_free_percent%"
+
+# solution:
+# df -h | grep "/" -w | awk '{printf "Total: %sG\nUsed: %s (%.2f%%)\nFree: %s (%.2f%%)\n",$3 + $4, $3, $3/($3+$4) * 100, $4, $4/($3+$4) * 100}'
 
 printf "\n"
 
@@ -44,7 +54,9 @@ echo "Top 5 processes by CPU usage:"
 
 # faster way:
 ps -eo pid,user,%cpu,%mem,command --sort=-%cpu | head -n 6
+# solution: ps aux --sort -%cpu | head -n 6 | awk '{print $1 "\t" $2 "\t" $3 "\t" $11}'
 
 # 5. Top 5 processes by memory usage
 echo "Top 5 processes by memory usage:"
 ps -eo pid,user,%cpu,%mem,command --sort=-%mem | head -n 6
+# solution: ps aux --sort -%mem | head -n 6 | awk '{print $1 "\t" $2 "\t" $4 "\t" $11}'
