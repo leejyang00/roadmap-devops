@@ -3,6 +3,7 @@
 # multipass launch --name test-server --cpus 2 --memory 2G --disk 10G
 # multipass mount ./server-performance-stats test-server:/home/ubuntu/scripts
 # bash server-stats.sh inside the instance
+# or multipass exec test-server -- bash /home/ubuntu/scripts/server-stats.sh
 
 echo "Starting server performance stats collection..."
 
