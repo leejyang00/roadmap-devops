@@ -25,6 +25,16 @@ services:
     depends_on:
       - mongodb
     restart: always
+  nginx:
+    container_name: local-nginx
+    image: nginx:alpine
+    ports:
+      - "80:80"
+    volumes:
+      - ./nginx/nginx.conf:/etc/nginx/nginx.conf:ro
+    depends_on:
+      - api-app
+    restart: always
 
 volumes:
   mongodb_data:
