@@ -21,4 +21,7 @@ The API should connect to MongoDB to store the todo items. You can use Express f
 Requirement #1 - Dockerize the API
 You are required to dockerize the API and have a docker-compose.yml file which will spin up a MongoDB container and the API container. If everything works, you should be able to access the API via http://localhost:3000 and the todos should be saved to the MongoDB container. Data should be persisted when the containers are stopped and started.
 
+Bonus - Setup a reverse proxy
+Setup a reverse proxy using Nginx to allow you to access the application via http://your_domain.com. You should use docker-compose to setup the reverse proxy.
+
 
