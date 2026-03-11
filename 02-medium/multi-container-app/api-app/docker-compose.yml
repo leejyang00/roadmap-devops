@@ -41,6 +41,9 @@ services:
     depends_on:
       - api-app
     restart: always
+    networks:
+      - default
+      - monitoring_link
 
 volumes:
   mongodb_data:

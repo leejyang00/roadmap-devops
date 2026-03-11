@@ -19,23 +19,6 @@ services:
       - '--config.file=/etc/prometheus/prometheus.yaml' # specifying where config filecd 
       - '--storage.tsdb.path=/prometheus' # to ensure persistent storage
       - '--web.enable-lifecycle'
-  
-  # mongo-exporter
-  mongo-exporter:
-    image: percona/mongodb_exporter:0.49.0
-    container_name: mongo-exporter
-    restart: unless-stopped
-    command:
-      - '--mongodb.uri=${MONGO_URI}' # defined in .env
-      - '--collect-all'
-      - '--discovering-mode'
-    ports:
-      - "9216:9216"
-    networks:
-      - default
-      - monitoring_link
-      
-  # nginx-exporter
 
   node-exporter:
     image: quay.io/prometheus/node-exporter:latest
@@ -55,7 +38,33 @@ services:
     depends_on:
       - prometheus-service
     pid: host
-  
+
+  mongo-exporter:
+    image: percona/mongodb_exporter:0.49.0
+    container_name: mongo-exporter
+    restart: unless-stopped
+    command:
+      - '--mongodb.uri=${MONGO_URI}' # defined in .env
+      - '--collect-all'
+      - '--discovering-mode'
+    ports:
+      - "9216:9216"
+    networks:
+      - default
+      - monitoring_link
+      
+  nginx-exporter:
+    image: nginx/nginx-prometheus-exporter:1.5.1
+    container_name: nginx-exporter
+    restart: unless-stopped
+    ports:
+      - "9113:9113"
+    command:
+      - '-nginx.scrape-uri=http://nginx:8081/stub_status'
+    networks:
+      - default
+      - monitoring_link
+
 networks:
   monitoring_link:
     external: true
