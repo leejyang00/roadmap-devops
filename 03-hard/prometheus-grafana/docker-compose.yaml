@@ -1,0 +1,61 @@
+volumes:
+  prometheus_data:
+
+services:
+
+  prometheus-service:
+    image: prom/prometheus:latest
+    container_name: prometheus-container
+    hostname: prometheus-hostname
+    restart: unless-stopped
+    ports:
+      - "9090:9090"
+    volumes:
+      - ./infra_monitoring/prometheus/prometheus.yaml:/etc/prometheus/prometheus.yaml # Mount local config file into the container's expected path
+      # TBD: alerting rules
+      # TBD: recording rule
+      - prometheus_data:/prometheus # Provide persistent storage for metrics data
+    command:
+      - '--config.file=/etc/prometheus/prometheus.yaml' # specifying where config filecd 
+      - '--storage.tsdb.path=/prometheus' # to ensure persistent storage
+      - '--web.enable-lifecycle'
+  
+  # mongo-exporter
+  mongo-exporter:
+    image: percona/mongodb_exporter:0.49.0
+    container_name: mongo-exporter
+    restart: unless-stopped
+    command:
+      - '--mongodb.uri=${MONGO_URI}' # defined in .env
+      - '--collect-all'
+      - '--discovering-mode'
+    ports:
+      - "9216:9216"
+    networks:
+      - default
+      - monitoring_link
+      
+  # nginx-exporter
+
+  node-exporter:
+    image: quay.io/prometheus/node-exporter:latest
+    container_name: node-exporter
+    restart: unless-stopped
+    expose:
+      - 9100
+    volumes:
+      - '/proc:/host/proc:ro'
+      - '/sys:/host/sys:ro'
+      - '/:/rootfs:ro'
+    command:
+      - '--path.procfs=/host/proc'
+      - '--path.sysfs=/host/sys'
+      - '--path.rootfs=/rootfs'
+      - '--collector.filesystem.mount-points-exclude=^/(sys|proc|dev|host|etc)($$|/)'
+    depends_on:
+      - prometheus-service
+    pid: host
+  
+networks:
+  monitoring_link:
+    external: true

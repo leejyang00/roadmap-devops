@@ -1,0 +1,22 @@
+# my global config
+
+global:
+  scrape_interval: 300s # Set the scrape interval to every 5 minutes
+  evaluation_interval: 300s # Evaluate rules every 5 minutes
+
+# rule_files:
+  # - "alerts.yaml" # Load alerting rules from this file
+
+scrape_configs:
+  - job_name: "prometheus" # scrape Prometheus itself
+    static_configs:
+      - targets: ["localhost:9090"]
+
+  - job_name: "node-exporter"
+    static_configs:
+      - targets: ["node-exporter:9100"]
+  
+  - job_name: "mongo-exporter"
+    static_configs:
+      - targets: ["mongo-exporter:9216"]
+  
