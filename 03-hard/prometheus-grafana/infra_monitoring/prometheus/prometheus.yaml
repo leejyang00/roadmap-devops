@@ -11,6 +11,10 @@ scrape_configs:
   - job_name: "prometheus" # scrape Prometheus itself
     static_configs:
       - targets: ["localhost:9090"]
+  
+  - job_name: "api-app-exporter"
+    static_configs:
+      - targets: ["api-app:3000"]
 
   - job_name: "node-exporter"
     static_configs:

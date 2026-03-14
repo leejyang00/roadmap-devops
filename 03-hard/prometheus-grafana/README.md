@@ -30,6 +30,12 @@ This project sets up a full observability stack:
 - Prometheus:
     Scrapes metrics from various endpoints, evaluates alert rules, and retain data for analysis
 
+last bit:
+- setup application monitoring prom-client and custom metrics out
+- setup promtail for scrapping docker logs, and store them in Loki
+
+
+promtail has reached End of Life (EOL) March 02, 2026, no future support or updates. Future feature developments will occur in Grafana Alloy
 
 
 
