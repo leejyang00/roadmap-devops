@@ -37,6 +37,7 @@ last bit:
 
 promtail has reached End of Life (EOL) March 02, 2026, no future support or updates. Future feature developments will occur in Grafana Alloy
 
-
-
-
+docker exec prometheus-container wget -qO- http://api-app:3000/metrics
+docker network inspect monitoring_link --format '{{range .Containers}}{{.Name}} {{end}}'
+docker compose up -d --force-recreate
+docker compose up -d --build prometheus-service

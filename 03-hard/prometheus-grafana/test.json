@@ -1,0 +1,67 @@
+[
+    {
+        "Name": "monitoring_link",
+        "Id": "a99542b1a0a99b034907100eaaa25d0c798b2f5cd0b126b1054c9ebd3f789113",
+        "Created": "2026-03-11T11:36:18.801675441+10:00",
+        "Scope": "local",
+        "Driver": "bridge",
+        "EnableIPv4": true,
+        "EnableIPv6": false,
+        "IPAM": {
+            "Driver": "default",
+            "Options": {},
+            "Config": [
+                {
+                    "Subnet": "172.20.0.0/16",
+                    "Gateway": "172.20.0.1"
+                }
+            ]
+        },
+        "Internal": false,
+        "Attachable": false,
+        "Ingress": false,
+        "ConfigFrom": {
+            "Network": ""
+        },
+        "ConfigOnly": false,
+        "Containers": {
+            "336a4f49832d0597238566dc7618b5ca18e547a22e0b4d4124189451ce57ec4f": {
+                "Name": "mongodb",
+                "EndpointID": "b1f31bab64254d374714897719e19e3b697a0cdb5b8242a72d2503192545c14a",
+                "MacAddress": "1a:88:26:61:1d:c1",
+                "IPv4Address": "172.20.0.3/16",
+                "IPv6Address": ""
+            },
+            "72ec8a6c6dfb799793b86a25613e3e68f95af70133fff7a9d7d953796d6117f2": {
+                "Name": "local-nginx",
+                "EndpointID": "b9c0003ad5125a0ad06c715070075898e162a062e06bacb2e878ad881d02fe98",
+                "MacAddress": "56:4d:bf:d6:39:42",
+                "IPv4Address": "172.20.0.5/16",
+                "IPv6Address": ""
+            },
+            "aca66904d8fe3459c35dcb6ab2c3f82b43676530e775b3fa51d5ca27f75f5b81": {
+                "Name": "api-app",
+                "EndpointID": "c12038d8859aabf8682a465ba4d5ac547e63e5f9bdd60330ea8017ad4dfef6c9",
+                "MacAddress": "02:5f:72:01:90:1f",
+                "IPv4Address": "172.20.0.6/16",
+                "IPv6Address": ""
+            },
+            "e8947ba08c015e28c323cc536307ebefc0300500f73eaf6d9cc420f8daadc0de": {
+                "Name": "nginx-exporter",
+                "EndpointID": "8798d6b446d5ee77258814519685c2a7f60c84efc413f287596748dcfdfe5dbf",
+                "MacAddress": "fe:17:4a:bd:13:2b",
+                "IPv4Address": "172.20.0.2/16",
+                "IPv6Address": ""
+            },
+            "f33a23ed2b178f9dd56ab2ce7c76bae6d47856d89a6572e7988c004337d4b2c7": {
+                "Name": "mongo-exporter",
+                "EndpointID": "0611e8ab3c7472483d715af7ef615f8c72fe1aa7f1b133f82d708c4bd0a004d1",
+                "MacAddress": "e2:19:e7:db:f3:4b",
+                "IPv4Address": "172.20.0.4/16",
+                "IPv6Address": ""
+            }
+        },
+        "Options": {},
+        "Labels": {}
+    }
+]

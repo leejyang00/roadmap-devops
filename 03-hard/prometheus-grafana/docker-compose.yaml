@@ -37,6 +37,9 @@ services:
       - '--config.file=/etc/prometheus/prometheus.yaml' # specifying where config filecd 
       - '--storage.tsdb.path=/prometheus' # to ensure persistent storage
       - '--web.enable-lifecycle'
+    networks:
+      - default
+      - monitoring_link
 
   node-exporter:
     image: quay.io/prometheus/node-exporter:latest
