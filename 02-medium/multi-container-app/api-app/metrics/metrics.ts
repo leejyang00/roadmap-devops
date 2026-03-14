@@ -1,21 +1,33 @@
-// import client from 'prom-client'
+import * as client from "prom-client";
 
-// // Collect default Node.js metrics (memory, CPU, event loop, etc.)
-// client.collectDefaultMetrics()
+// const register = new client.Registry()
+client.collectDefaultMetrics();
 
-// // Counter: total HTTP requests
-// export const httpRequestsTotal = new client.Counter({
-//   name: 'http_requests_total',
-//   help: 'Total number of HTTP requests',
-//   labelNames: ['method', 'route', 'status'],
-// })
+// create custom counter to track HTTP requests
+const httpRequestsTotal = new client.Counter({
+    name: 'http_requests_total',
+    help: 'Total number of HTTP requests',
+    labelNames: ['method', 'route']
+})
+// register.registerMetric(httpRequestsTotal)
 
-// // Histogram: request duration in seconds
-// export const httpRequestDurationSeconds = new client.Histogram({
-//   name: 'http_request_duration_seconds',
-//   help: 'HTTP request duration in seconds',
-//   labelNames: ['method', 'route', 'status'],
-//   buckets: [0.005, 0.01, 0.025, 0.05, 0.1, 0.25, 0.5, 1, 2.5, 5],
-// })
+// create a custom counter for todos created
+const todosCreatedTotal = new client.Counter({
+    name: 'todos_created_total',
+    help: 'Total number of todos created'
+})
 
-// export const register = client.register
+// Create a histogram to measure todo creation duration in seconds
+const todoCreationDuration = new client.Histogram({
+  name: 'todo_creation_duration_seconds',
+  help: 'Time taken to create a todo in seconds',
+  buckets: [0.1, 0.5, 1, 2, 5] // Customize buckets as needed
+});
+
+export {
+    httpRequestsTotal,
+    todosCreatedTotal,
+    todoCreationDuration
+}
+
+export const register = client.register;

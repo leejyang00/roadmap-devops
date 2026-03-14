@@ -1,7 +1,12 @@
 import { Hono } from 'hono'
 import mongoose from 'mongoose'
 import Todo from '../models/todo'
-import { httpRequestsTotal, httpRequestDurationSeconds, register } from '../metrics/metrics'
+import {
+  httpRequestsTotal,
+  todosCreatedTotal,
+  todoCreationDuration,
+  register
+} from '../metrics/metrics'
 
 // Connect to MongoDB
 mongoose.connect(process.env.MONGO_URI || '', {})
@@ -16,26 +21,33 @@ mongoose.connect(process.env.MONGO_URI || '', {})
 
 const app = new Hono()
 
-// Middleware: track request count and duration
 app.use('*', async (c, next) => {
-//   const start = Date.now()
-//   await next()
-//   const duration = (Date.now() - start) / 1000
-//   const route = c.req.routePath || c.req.path
-//   const labels = { method: c.req.method, route, status: String(c.res.status) }
-//   httpRequestsTotal.inc(labels)
-//   httpRequestDurationSeconds.observe(labels, duration)
-// })
+  const route = c.req.path
+  httpRequestsTotal.inc({
+    method: c.req.method,
+    route
+  })
+  await next()
+})
 
 app.get('/', (c) => {
-  return c.text('Hello Hono!')
+  return c.json({
+    message: "Welcome to Todo API - built by Hono",
+    endpoints: {
+      'GET /todos': 'Get all todos',
+      'GET /todos/{id}': 'Get a single todo',
+      'POST /todos': 'Create a new todo',
+      'PUT /todos/{id}': 'Update a todo',
+      'DELETE /todos/{id}': 'Delete a todo'
+    }
+  })
 })
 
 // Prometheus metrics endpoint
-// app.get('/metrics', async (c) => {
-//   c.header('Content-Type', register.contentType)
-//   return c.text(await register.metrics())
-// })
+app.get('/metrics', async (c) => {
+  c.header('Content-Type', register.contentType)
+  return c.text(await register.metrics())
+})
 
 app.get('/todos', async (c) => {
   try {
@@ -47,6 +59,7 @@ app.get('/todos', async (c) => {
 })
 
 app.post('/todos', async (c) => {
+  const start = Date.now();
   const req = await c.req.json()
 
   const todo = new Todo({
@@ -59,6 +72,14 @@ app.post('/todos', async (c) => {
 
   try {
     const newTodo = await todo.save()
+
+    // increment custom counter for todos created
+    todosCreatedTotal.inc()
+
+    // record duration of the todo creation
+    const duration = (Date.now() - start) / 1000
+    todoCreationDuration.observe(duration)
+
     return c.json(newTodo, 201)
   } catch (error) {
     return c.json({ message: 'Error creating todo', error }, 500)

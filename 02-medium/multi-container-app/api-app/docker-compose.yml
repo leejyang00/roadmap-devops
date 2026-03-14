@@ -31,6 +31,9 @@ services:
     depends_on:
       - mongodb
     restart: always
+    networks:
+      - default
+      - monitoring_link
   nginx:
     container_name: local-nginx
     image: nginx:alpine
