@@ -52,6 +52,6 @@ volumes:
     driver: local
 
 networks:
-  monitoring_link:
+  monitoring_link: # external network has to be created first 
     external: true
 

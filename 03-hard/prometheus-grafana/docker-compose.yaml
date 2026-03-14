@@ -1,7 +1,25 @@
 volumes:
   prometheus_data:
+  grafana_data:
 
 services:
+
+  grafana-service:
+    image: grafana/grafana
+    container_name: grafana-service
+    restart: unless-stopped
+    ports:
+      - "3001:3000"
+    volumes:
+      - grafana_data:/var/lib/grafana
+      - ./infra_monitoring/grafana/datasources:/etc/grafana/provisioning/datasources
+      - ./infra_monitoring/grafana/dashboards:/etc/grafana/provisioning/dashboards
+    environment:
+      - GF_SECURITY_ADMIN_USER=${GRAFANA_USER}
+      - GF_SECURITY_ADMIN_PASSWORD=${GRAFANA_PWD}
+      - GF_USERS_ALLOW_SIGN_UP=false
+    depends_on:
+      - prometheus-service
 
   prometheus-service:
     image: prom/prometheus:latest
@@ -66,5 +84,5 @@ services:
       - monitoring_link
 
 networks:
-  monitoring_link:
+  monitoring_link: # external network has to be created first 
     external: true

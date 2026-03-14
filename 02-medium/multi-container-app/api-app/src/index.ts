@@ -1,6 +1,7 @@
 import { Hono } from 'hono'
 import mongoose from 'mongoose'
 import Todo from '../models/todo'
+import { httpRequestsTotal, httpRequestDurationSeconds, register } from '../metrics/metrics'
 
 // Connect to MongoDB
 mongoose.connect(process.env.MONGO_URI || '', {})
@@ -15,9 +16,26 @@ mongoose.connect(process.env.MONGO_URI || '', {})
 
 const app = new Hono()
 
+// Middleware: track request count and duration
+app.use('*', async (c, next) => {
+//   const start = Date.now()
+//   await next()
+//   const duration = (Date.now() - start) / 1000
+//   const route = c.req.routePath || c.req.path
+//   const labels = { method: c.req.method, route, status: String(c.res.status) }
+//   httpRequestsTotal.inc(labels)
+//   httpRequestDurationSeconds.observe(labels, duration)
+// })
+
 app.get('/', (c) => {
   return c.text('Hello Hono!')
 })
+
+// Prometheus metrics endpoint
+// app.get('/metrics', async (c) => {
+//   c.header('Content-Type', register.contentType)
+//   return c.text(await register.metrics())
+// })
 
 app.get('/todos', async (c) => {
   try {

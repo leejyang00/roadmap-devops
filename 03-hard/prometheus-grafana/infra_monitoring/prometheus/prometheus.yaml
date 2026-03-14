@@ -1,8 +1,8 @@
 # my global config
 
 global:
-  scrape_interval: 300s # Set the scrape interval to every 5 minutes
-  evaluation_interval: 300s # Evaluate rules every 5 minutes
+  scrape_interval: 15s # pull metrics
+  # evaluation_interval: 300s # run alerting/recording rules
 
 # rule_files:
   # - "alerts.yaml" # Load alerting rules from this file
