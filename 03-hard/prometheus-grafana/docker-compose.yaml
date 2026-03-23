@@ -86,6 +86,12 @@ services:
       - default
       - monitoring_link
 
+  # promtail:
+  #   image:
+  #   container_name: promtail
+  #   restart: unless-stopped
+  #   ports:
+
 networks:
   monitoring_link: # external network has to be created first 
     external: true
