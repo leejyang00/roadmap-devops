@@ -1,0 +1,81 @@
+name: Deploy to GitHub Pages - beginner
+
+on:
+  push:
+    branches:
+      - main
+    paths:
+      - "01-beginner/github-action-deployment-workflow/**"
+  workflow_dispatch: # Allows manual triggers from the Actions tab
+
+jobs:
+  deploy-pages:
+    # Grant GITHUB_TOKEN the permissions required to make a Pages deployment
+    permissions:
+      pages: write # to deploy to Pages
+      id-token: write # to verify the deployment originates from an appropriate source
+
+    # Deploy to the github-pages environment
+    environment:
+      name: github-pages
+      url: ${{ steps.deployment.outputs.page_url }}
+
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Setup Pages
+        uses: actions/configure-pages@v5
+
+      - name: Upload artifact
+        uses: actions/upload-pages-artifact@v3
+        with:
+          # Path to the folder containing your static files
+          path: ./01-beginner/github-action-deployment-workflow
+
+      - name: Deploy to GitHub Pages
+        id: deployment
+        uses: actions/deploy-pages@v4 # or specific "vX.X.X" version tag for this action
+
+
+# name: Deploy to GitHub Pages
+
+# on:
+#   push:
+#     branches:
+#       - main
+
+# # Required permissions for GitHub Pages deployment
+# permissions:
+#   contents: read
+#   pages: write
+#   id-token: write
+
+# # Only allow one deployment at a time
+# concurrency:
+#   group: pages
+#   cancel-in-progress: true
+
+# jobs:
+#   deploy:
+#     environment:
+#       name: github-pages
+#       url: ${{ steps.deployment.outputs.page_url }}
+#     runs-on: ubuntu-latest
+#     steps:
+#       - name: Checkout
+#         uses: actions/checkout@v4
+
+#       - name: Setup Pages
+#         uses: actions/configure-pages@v5
+
+#       - name: Upload artifact
+#         uses: actions/upload-pages-artifact@v3
+#         with:
+#           # Path to the folder containing your static files
+#           path: ./01-beginner/github-action-deployment-workflow
+
+#       - name: Deploy to GitHub Pages
+#         id: deployment
+#         uses: actions/deploy-pages@v4
