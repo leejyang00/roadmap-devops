@@ -52,6 +52,11 @@ resource "aws_route_table" "private_rt" {
     gateway_id = "local"
   }
 
+  route { # NEEDING TO REACH INTERNET FROM PRIVATE SUBNET - TO NAT GATEWAY
+    cidr_block     = "0.0.0.0/0"
+    nat_gateway_id = aws_nat_gateway.main_nat.id   # ← was "local"
+  }
+
   tags = {
     Name = "remote-linux-rt-private"
   }
@@ -72,3 +77,22 @@ resource "aws_route_table_association" "private_subnet_1_association" {
 # NAT Gateway has to be attached to the public subnet
 # route table for the private subnet has to point to the NAT Gateway if going 0.0.0.0/0
 # create an Elastic IP resource and attach it to NAT Gateway
+
+resource "aws_eip" "nat_eip" {
+  domain = "vpc"
+
+  tags = {
+    Name = "remote-linux-nat-eip"
+  }
+}
+
+resource "aws_nat_gateway" "main_nat" {
+  allocation_id = aws_eip.nat_eip.id
+  subnet_id     = aws_subnet.public_subnet_1.id
+
+  depends_on = [ aws_internet_gateway.main_igw ]
+
+  tags = {
+    Name = "remote-linux-nat-gateway"
+  }
+}
