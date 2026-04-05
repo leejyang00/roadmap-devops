@@ -68,3 +68,7 @@ resource "aws_route_table_association" "private_subnet_1_association" {
   subnet_id      = aws_subnet.private_subnet_1.id
   route_table_id = aws_route_table.private_rt.id
 }
+
+# NAT Gateway has to be attached to the public subnet
+# route table for the private subnet has to point to the NAT Gateway if going 0.0.0.0/0
+# create an Elastic IP resource and attach it to NAT Gateway
