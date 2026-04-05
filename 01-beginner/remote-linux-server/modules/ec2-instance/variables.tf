@@ -32,6 +32,11 @@ variable "public_subnet_id" {
   type        = string
 }
 
+variable "private_subnet_id" {
+  description = "Private Subnet ID to launch the instance in"
+  type        = string
+}
+
 variable "vpc_id" {
   description = "VPC ID for the security group"
   type        = string

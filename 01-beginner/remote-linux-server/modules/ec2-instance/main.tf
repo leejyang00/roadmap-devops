@@ -60,3 +60,42 @@ resource "aws_vpc_security_group_egress_rule" "allow_all_outbound" {
   to_port     = -1
 }
 
+resource "aws_instance" "private_test" {
+  ami           = data.aws_ami.amazon_linux_2.id   # reuse same AMI
+  instance_type = "t3.micro"
+  subnet_id     = var.private_subnet_id     # put in private subnet
+
+  vpc_security_group_ids = [aws_security_group.private_instance_sg.id]
+  key_name               = var.key_name
+
+  tags = { Name = "private-${var.instance_name}" }
+}
+
+# Security Group for the main EC2 instance
+resource "aws_security_group" "private_instance_sg" {
+  name        = "${var.instance_name}-private-sg"
+  description = "Security group for private ${var.instance_name}"
+  vpc_id      = var.vpc_id
+
+  tags = {
+    Name = "${var.instance_name}-private-sg-tag"
+  }
+}
+
+resource "aws_vpc_security_group_ingress_rule" "allow_ssh_private" {
+  security_group_id = aws_security_group.private_instance_sg.id
+
+  referenced_security_group_id = aws_security_group.main_instance_sg.id  # allow SSH from the public instance's security group
+  from_port   = 22
+  ip_protocol = "tcp"
+  to_port     = 22
+}
+
+resource "aws_vpc_security_group_egress_rule" "allow_all_outbound_private" {
+  security_group_id = aws_security_group.private_instance_sg.id
+
+  cidr_ipv4   = "0.0.0.0/0"
+  from_port   = -1
+  ip_protocol = "-1"
+  to_port     = -1
+}
