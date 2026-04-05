@@ -10,3 +10,5 @@
 21st feb 2026 - https://roadmap.sh/projects/monitoring 
 
 4th apr 2026 - https://roadmap.sh/projects/github-actions-deployment-workflow
+
+5th apr 2026 - https://roadmap.sh/projects/ssh-remote-server-setup
